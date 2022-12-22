@@ -1,28 +1,29 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDeliveryAPI.Controllers
-{
+namespace FoodDeliveryAPI.Controllers {
     [ApiController]
-    [Route("api/account")]
-    public class AccountController : ControllerBase {
+    [Route("api/dish")]
+    public class DishController : ControllerBase {
+        private readonly ILogger<DishController> _logger;
 
-        private readonly ILogger<AccountController> _logger;
-
-        public AccountController(ILogger<AccountController> logger) {
+        public DishController(ILogger<DishController> logger) {
             _logger = logger;
         }
 
         /// <summary>
-        /// Register new user.
+        /// Get a list of dishies (menu)
         /// </summary>
+        /// <param name="categories"> Dishies categories </param>
+        /// <param name="vegetarian"> Get only vegetarian </param>
+        /// <param name="sorting"> Dishes sort </param>
+        /// <param name="page"> Dishies page</param>
         /// <returns></returns>
         /// <response code = "400" > Bad Request</response>
-        /// <response code = "409" > If there is user with same email</response>
+        /// <response code = "404" > If there is no dishes with these params or page is empty</response>
         /// <response code = "500" > Internal Server Error</response>
-        [HttpPost]
-        [Route("register")]
-        public async Task<ActionResult> Register() {
+        [HttpGet]
+        public async Task<ActionResult> GetDishies(List<string> categories, Boolean vegetarian, String sorting, int page) {
             try {
                 return Ok();
 
@@ -37,15 +38,15 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         /// <summary>
-        /// Log in to the system.
+        /// Get information about concrete dish.
         /// </summary>
+        /// <param name="id"> Dish id </param>
         /// <returns></returns>
-        /// <response code = "400" > Bad Request</response>
-        /// <response code = "401" > If email or password are incorrect</response>
+        /// <response code = "404" > Not Found</response>
         /// <response code = "500" > Internal Server Error</response>
-        [HttpPost]
-        [Route("login")]
-        public async Task<ActionResult> Login() {
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult> GetDish(int id) {
             try {
                 return Ok();
 
@@ -60,40 +61,19 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         /// <summary>
-        /// Log out system user.
+        /// Check if user is able to set rating of the dish
         /// </summary>
-        /// <returns></returns>
-        /// <response code = "400" > Bad Request</response>
-        /// <response code = "401" > If user unauthorized</response>
-        /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
-        [HttpPost]
-        [Route("logout")]
-        public async Task<ActionResult> Logout() {
-            try {
-                return Ok();
-
-            } catch (KeyNotFoundException e) {
-                _logger.LogError(e, e.Message);
-                return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
-                _logger.LogError(e, e.Message);
-                return Problem(statusCode: 500, title: "Something went wrong");
-            }
-        }
-
-        /// <summary>
-        /// Get user profile.
-        /// </summary>
+        /// <param name="id"> Dish id </param>
         /// <returns></returns>
         /// <response code = "401" > Unauthorized</response>
+        /// <response code = "403" > Forbidden</response>
+        /// <response code = "404" > Not Found dish</response>
         /// <response code = "500" > Internal Server Error</response>
         [Authorize]
         [HttpGet]
-        [Route("profile")]
-        public async Task<ActionResult> GetAccountProfile() {
-            try { 
+        [Route("{id}/rating/check")]
+        public async Task<ActionResult> DishRatingCheck(int id) {
+            try {
                 return Ok();
 
             } catch (KeyNotFoundException e) {
@@ -106,19 +86,20 @@ namespace FoodDeliveryAPI.Controllers
             }
         }
 
-
         /// <summary>
-        /// Edit user profile.
+        /// Set a rating for a dish
         /// </summary>
+        /// <param name="id"> Dish id </param>
         /// <returns></returns>
         /// <response code = "400" > Bad Request</response>
         /// <response code = "401" > Unauthorized</response>
         /// <response code = "403" > Forbidden</response>
+        /// <response code = "404" > Not Found dish</response>
         /// <response code = "500" > Internal Server Error</response>
         [Authorize]
-        [HttpPut]
-        [Route("profile")]
-        public async Task<ActionResult> EditAccountProfile() {
+        [HttpGet]
+        [Route("{id}/rating")]
+        public async Task<ActionResult> SetDishRating(int id) {
             try {
                 return Ok();
 

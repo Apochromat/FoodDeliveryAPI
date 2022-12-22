@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FoodDeliveryAPI.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDeliveryAPI.Controllers {
@@ -23,15 +24,16 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "404" > If there is no dishes with these params or page is empty</response>
         /// <response code = "500" > Internal Server Error</response>
         [HttpGet]
-        public async Task<ActionResult> GetDishies(List<string> categories, Boolean vegetarian, String sorting, int page) {
+        public async Task<ActionResult> GetDishies(List<string> categories, Boolean vegetarian, String sorting,
+            int page) {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -46,15 +48,15 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "500" > Internal Server Error</response>
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult> GetDish(int id) {
+        public async Task<ActionResult<DishDto>> GetDish(int id) {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -75,12 +77,12 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> DishRatingCheck(int id) {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -102,16 +104,15 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> SetDishRating(int id) {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
         }
-
     }
 }

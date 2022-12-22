@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDeliveryAPI.Controllers {
-
     [ApiController]
     [Route("api/order")]
     public class OrderController : ControllerBase {
@@ -27,12 +26,12 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> GetOrder(int id) {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -50,12 +49,12 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> GetOrders() {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -74,12 +73,12 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> CreateOrder() {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -101,12 +100,12 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> ConfirmOrderDelivery(int id) {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }

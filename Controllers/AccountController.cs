@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDeliveryAPI.Controllers
-{
+namespace FoodDeliveryAPI.Controllers {
     [ApiController]
     [Route("api/account")]
     public class AccountController : ControllerBase {
-
         private readonly ILogger<AccountController> _logger;
 
         public AccountController(ILogger<AccountController> logger) {
@@ -25,12 +23,12 @@ namespace FoodDeliveryAPI.Controllers
         public async Task<ActionResult> Register() {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -48,12 +46,12 @@ namespace FoodDeliveryAPI.Controllers
         public async Task<ActionResult> Login() {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -72,12 +70,12 @@ namespace FoodDeliveryAPI.Controllers
         public async Task<ActionResult> Logout() {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -93,14 +91,14 @@ namespace FoodDeliveryAPI.Controllers
         [HttpGet]
         [Route("profile")]
         public async Task<ActionResult> GetAccountProfile() {
-            try { 
+            try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -121,16 +119,15 @@ namespace FoodDeliveryAPI.Controllers
         public async Task<ActionResult> EditAccountProfile() {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
         }
-
     }
 }

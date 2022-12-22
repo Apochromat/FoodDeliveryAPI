@@ -24,12 +24,12 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> GetCart() {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -50,12 +50,12 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> AddDishBasket(int dishId) {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
@@ -77,16 +77,15 @@ namespace FoodDeliveryAPI.Controllers {
         public async Task<ActionResult> RemoveDishBasket(int dishId, Boolean increase) {
             try {
                 return Ok();
-
-            } catch (KeyNotFoundException e) {
+            }
+            catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
             }
         }
-
     }
 }

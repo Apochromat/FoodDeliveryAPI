@@ -1,5 +1,5 @@
-# MovieCatalogAPI
+# FoodDeliveryAPI
 ## Description
-An API for collecting information about movies. API supports multiple users with their own favorite movies and movie reviews.
+Under construction
 ## How to run
 Under constraction

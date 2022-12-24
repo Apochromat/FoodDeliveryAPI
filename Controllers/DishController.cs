@@ -1,4 +1,5 @@
 ﻿using FoodDeliveryAPI.Models.DTOs;
+using FoodDeliveryAPI.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,9 +8,12 @@ namespace FoodDeliveryAPI.Controllers {
     [Route("api/dish")]
     public class DishController : ControllerBase {
         private readonly ILogger<DishController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public DishController(ILogger<DishController> logger) {
+
+        public DishController(ILogger<DishController> logger, ApplicationDbContext context) {
             _logger = logger;
+            _context = context;
         }
 
         /// <summary>
@@ -24,8 +28,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "404" > If there is no dishes with these params or page is empty</response>
         /// <response code = "500" > Internal Server Error</response>
         [HttpGet]
-        public async Task<ActionResult> GetDishies(List<string> categories, Boolean vegetarian, String sorting,
-            int page) {
+        public async Task<ActionResult> GetDishies([FromQuery] List<DishCategory> categories, [FromQuery] Boolean vegetarian, [FromQuery] DishSorting sorting, [FromQuery] int page = 1) {
             try {
                 return Ok();
             }

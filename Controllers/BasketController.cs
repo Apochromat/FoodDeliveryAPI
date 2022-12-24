@@ -7,9 +7,11 @@ namespace FoodDeliveryAPI.Controllers {
     [Route("api/basket")]
     public class BasketController : ControllerBase {
         private readonly ILogger<BasketController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public BasketController(ILogger<BasketController> logger) {
+        public BasketController(ILogger<BasketController> logger, ApplicationDbContext context) {
             _logger = logger;
+            _context = context;
         }
 
         /// <summary>

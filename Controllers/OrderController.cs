@@ -6,9 +6,10 @@ namespace FoodDeliveryAPI.Controllers {
     [Route("api/order")]
     public class OrderController : ControllerBase {
         private readonly ILogger<OrderController> _logger;
-
-        public OrderController(ILogger<OrderController> logger) {
+        private readonly ApplicationDbContext _context;
+        public OrderController(ILogger<OrderController> logger, ApplicationDbContext context) {
             _logger = logger;
+            _context = context;
         }
 
         /// <summary>

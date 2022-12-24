@@ -6,9 +6,11 @@ namespace FoodDeliveryAPI.Controllers {
     [Route("api/account")]
     public class AccountController : ControllerBase {
         private readonly ILogger<AccountController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public AccountController(ILogger<AccountController> logger) {
+        public AccountController(ILogger<AccountController> logger, ApplicationDbContext context) {
             _logger = logger;
+            _context = context;
         }
 
         /// <summary>

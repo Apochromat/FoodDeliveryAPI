@@ -1,10 +1,12 @@
 ﻿using FoodDeliveryAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDeliveryAPI;
 
 public class ApplicationDbContext : DbContext {
     public ApplicationDbContext() : base() {
+        Database.EnsureCreated();
     }
 
     public DbSet<User> Users { get; set; }
@@ -24,7 +26,10 @@ public class ApplicationDbContext : DbContext {
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        optionsBuilder.UseMySql("server=79.137.199.238;user=deliveryfood;password=#J9c&!wjG4q@75;database=deliveryfood;",
-            new MySqlServerVersion(new Version(8, 0, 31)));
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
+        optionsBuilder.UseMySql(configuration.GetConnectionString("MySQLDatabase"), new MySqlServerVersion(new Version(8, 0, 31)));
     }
 }

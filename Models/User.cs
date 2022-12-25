@@ -1,9 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using FoodDeliveryAPI.Models.DTOs;
 using FoodDeliveryAPI.Models.Enums;
 
 namespace FoodDeliveryAPI.Models;
 
 public class User {
+
+    public User() { }
+    public User(UserRegisterModel userRegisterModel) {
+        this.FullName = userRegisterModel.FullName;
+        this.Password = userRegisterModel.Password;
+        this.Email = userRegisterModel.Email;
+        this.Address = userRegisterModel.Address;
+        this.BirthDate = userRegisterModel.BirthDate;
+        this.Gender = userRegisterModel.Gender;
+        this.PhoneNumber = userRegisterModel.PhoneNumber;
+    }
+
     [Key]
     [Required]
     public Guid Id { get; set; } = Guid.NewGuid();

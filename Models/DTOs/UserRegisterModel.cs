@@ -28,7 +28,7 @@ public class UserRegisterModel {
 
     [DisplayName("birthDate")] public DateTime? BirthDate { get; set; }
 
-    [Required] [DisplayName("gender")] public Gender Gender { get; set; }
+    [Required][DisplayName("gender")] public Gender Gender { get; set; }
 
     [Phone] [DisplayName("phoneNumber")] public String? PhoneNumber { get; set; }
 }

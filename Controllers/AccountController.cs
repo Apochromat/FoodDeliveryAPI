@@ -1,3 +1,5 @@
+using FoodDeliveryAPI.Models.DTOs;
+using FoodDeliveryAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +9,12 @@ namespace FoodDeliveryAPI.Controllers {
     public class AccountController : ControllerBase {
         private readonly ILogger<AccountController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IAccountService _accountService;
 
-        public AccountController(ILogger<AccountController> logger, ApplicationDbContext context) {
+        public AccountController(ILogger<AccountController> logger, ApplicationDbContext context, IAccountService accountService) {
             _logger = logger;
             _context = context;
+            _accountService = accountService;
         }
 
         /// <summary>
@@ -22,9 +26,9 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "500" > Internal Server Error</response>
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult> Register() {
+        public async Task<ActionResult<TokenResponse>> Register([FromBody] UserRegisterModel userRegisterModel) {
             try {
-                return Ok();
+                return await _accountService.register(userRegisterModel);
             }
             catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);

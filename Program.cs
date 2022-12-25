@@ -5,18 +5,25 @@ using FoodDeliveryAPI.Models.Enums;
 using Microsoft.OpenApi.Any;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using FoodDeliveryAPI;
+using System.Text.Json.Serialization;
+using FoodDeliveryAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
+// Add services to the container. Add ability to right convert strings to enums
+builder.Services.AddControllers().AddJsonOptions(opts => {
+    var enumConverter = new JsonStringEnumConverter();
+    opts.JsonSerializerOptions.Converters.Add(enumConverter);
+});
+// Add services
+builder.Services.AddScoped<IAccountService, AccountService>();
+
 
 // Connect DB
 builder.Services.AddDbContext<ApplicationDbContext>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(option => {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "FoodDeliveryAPI", Version = "v1" });
     option.SchemaFilter<EnumSchemaFilter>();
@@ -42,7 +49,6 @@ builder.Services.AddSwaggerGen(option => {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
-
 
 var app = builder.Build();
 

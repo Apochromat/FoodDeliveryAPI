@@ -5,6 +5,7 @@ using FoodDeliveryAPI.Models.Enums;
 using Microsoft.OpenApi.Any;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using FoodDeliveryAPI;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +43,13 @@ builder.Services.AddSwaggerGen(option => {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
-
+ // Add logging
+var logger = new LoggerConfiguration()
+  .ReadFrom.Configuration(builder.Configuration)
+  .Enrich.FromLogContext()
+  .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 var app = builder.Build();
 

@@ -23,4 +23,16 @@ public class UserDto {
     [EmailAddress] [DisplayName("email")] public String? Email { get; set; }
 
     [Phone] [DisplayName("phoneNumber")] public String? PhoneNumber { get; set; }
+
+    public UserDto() { }
+    public UserDto(User user) { 
+        Id = user.Id;
+        FullName = user.FullName;
+        BirthDate = user.BirthDate;
+        Gender = user.Gender;
+        Address = user.Address;
+        Email = user.Email;
+        PhoneNumber = user.PhoneNumber;
+    }
+
 }

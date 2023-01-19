@@ -34,6 +34,10 @@ namespace FoodDeliveryAPI.Controllers {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
             }
+            catch (ArgumentException e) {
+                _logger.LogError(e, e.Message);
+                return Problem(statusCode: 409, title: e.Message);
+            }
             catch (Exception e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 500, title: "Something went wrong");
@@ -49,9 +53,9 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "500" > Internal Server Error</response>
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult> Login() {
+        public async Task<ActionResult<TokenResponse>> Login([FromBody] LoginCredentials loginCredentials) {
             try {
-                return Ok();
+                return await _accountService.login(loginCredentials);
             }
             catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
@@ -96,9 +100,9 @@ namespace FoodDeliveryAPI.Controllers {
         [Authorize]
         [HttpGet]
         [Route("profile")]
-        public async Task<ActionResult> GetAccountProfile() {
+        public async Task<ActionResult<UserDto>> GetAccountProfile() {
             try {
-                return Ok();
+                return _accountService.getProfile(new Guid(User.Identity.Name));
             }
             catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);

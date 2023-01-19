@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using FoodDeliveryAPI.Models.Enums;
-using Microsoft.OpenApi.Any;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using FoodDeliveryAPI;
 using System.Text.Json.Serialization;
 using FoodDeliveryAPI.Services;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +49,22 @@ builder.Services.AddSwaggerGen(option => {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = JwtConfiguration.Issuer,
+            ValidateAudience = true,
+            ValidAudience = JwtConfiguration.Audience,
+            ValidateLifetime = true,
+            IssuerSigningKey = JwtConfiguration.GetSymmetricSecurityKey(),
+            ValidateIssuerSigningKey = true,
+
+        };
+    });
 
 var app = builder.Build();
 

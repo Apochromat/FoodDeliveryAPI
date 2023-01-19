@@ -1,5 +1,9 @@
 ﻿using FoodDeliveryAPI.Models;
 using FoodDeliveryAPI.Models.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -13,8 +17,23 @@ namespace FoodDeliveryAPI.Services {
             _context = context;
         }
 
-        public String login(LoginCredentials loginCredentials) {
-            throw new NotImplementedException();
+        public async Task<TokenResponse> login(LoginCredentials loginCredentials) {
+            var identity = GetIdentity(loginCredentials.Email.ToLower(), loginCredentials.Password);
+            if (identity == null) {
+                throw new ArgumentException("Incorrect username or password");
+            }
+
+            var now = DateTime.UtcNow;
+            var jwt = new JwtSecurityToken(
+                issuer: JwtConfiguration.Issuer,
+                audience: JwtConfiguration.Audience,
+                notBefore: now,
+                claims: identity.Claims,
+                expires: now.Add(TimeSpan.FromMinutes(JwtConfiguration.Lifetime)),
+                signingCredentials: new SigningCredentials(JwtConfiguration.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return new TokenResponse(encodedJwt, new Guid(identity.Name));
         }
 
         public String logout(string JwtToken) {
@@ -22,10 +41,8 @@ namespace FoodDeliveryAPI.Services {
         }
 
         public async Task<TokenResponse> register(UserRegisterModel userRegisterModel) {
-            foreach (User n_user in _context.Users) {
-                if (n_user.Email.ToLower() == userRegisterModel.Email.ToLower())
-                    throw new ArgumentException("User with this email already exists");
-            }
+            if (_context.Users.Where(u => u.Email.ToLower() == userRegisterModel.Email.ToLower()).FirstOrDefault() != null)
+                throw new ArgumentException("User with this email already exists");
 
             User user = new User(userRegisterModel);
             await _context.Users.AddAsync(user);
@@ -33,8 +50,7 @@ namespace FoodDeliveryAPI.Services {
 
             _logger.LogInformation("Successful register");
 
-            return new TokenResponse(JsonSerializer.Serialize(user));
-            //return login(new LoginCredentials {Email = userRegisterModel.Email, Password = userRegisterModel.Password });
+            return await login(new LoginCredentials {Email = userRegisterModel.Email, Password = userRegisterModel.Password });
         }
 
         public String editProfile(Guid UserId, UserEditModel userEditModel) {
@@ -42,7 +58,24 @@ namespace FoodDeliveryAPI.Services {
         }
 
         public UserDto getProfile(Guid UserId) {
-            throw new NotImplementedException();
+            User? user = _context.Users.Where(x => x.Id == UserId).FirstOrDefault();
+            if (user == null) throw new KeyNotFoundException("User not found");
+
+            return new UserDto(user);
+        }
+
+        private ClaimsIdentity? GetIdentity(string email, string password) {
+            var user = _context.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
+            if (user == null) {
+                return null;
+            }
+
+            var claims = new List<Claim>{
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
+                };
+
+            return new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
         }
     }
 }

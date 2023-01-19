@@ -22,6 +22,9 @@ public class User {
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
+    public Role Role { get; set; } = Role.User;
+
+    [Required]
     public String FullName { get; set; } = "";
 
     [Required]

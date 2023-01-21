@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using FoodDeliveryAPI.Models.DTOs;
 using FoodDeliveryAPI.Models.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace FoodDeliveryAPI.Models;
 
-public class User {
+public class User : IdentityUser<Guid> {
 
     public User() { }
     public User(UserRegisterModel userRegisterModel) {
         this.FullName = userRegisterModel.FullName;
-        this.Password = userRegisterModel.Password;
+        this.UserName = userRegisterModel.Email;
         this.Email = userRegisterModel.Email;
         this.Address = userRegisterModel.Address;
         this.BirthDate = userRegisterModel.BirthDate;
@@ -17,12 +18,8 @@ public class User {
         this.PhoneNumber = userRegisterModel.PhoneNumber;
     }
 
-    [Key]
     [Required]
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    [Required]
-    public Role Role { get; set; } = Role.User;
+    public RoleType Role { get; set; } = RoleType.User;
 
     [Required]
     public String FullName { get; set; } = "";
@@ -43,4 +40,6 @@ public class User {
     public List<Rating> RawRating { get; set; } = new List<Rating>();
     public List<Basket> Basket { get; set; } = new List<Basket>();
     public List<Order> Orders { get; set; } = new List<Order>();
+
+    public ICollection<UserRole> Roles { get; set; }
 }

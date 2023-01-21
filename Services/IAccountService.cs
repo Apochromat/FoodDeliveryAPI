@@ -7,7 +7,7 @@ namespace FoodDeliveryAPI.Services {
         Task<TokenResponse> register(UserRegisterModel userRegisterModel);
         Task<TokenResponse> login(LoginCredentials loginCredentials);
         String logout(String JwtToken);
-        UserDto getProfile(Guid UserId);
+        Task<UserDto> getProfile(string email);
         String editProfile(Guid UserId, UserEditModel userEditModel);
 
     }

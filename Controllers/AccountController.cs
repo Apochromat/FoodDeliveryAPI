@@ -30,6 +30,10 @@ namespace FoodDeliveryAPI.Controllers {
             try {
                 return await _accountService.register(userRegisterModel);
             }
+            catch (InvalidOperationException e) {
+                _logger.LogError(e, e.Message);
+                return Problem(statusCode: 400, title: e.Message);
+            }
             catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
@@ -102,7 +106,7 @@ namespace FoodDeliveryAPI.Controllers {
         [Route("profile")]
         public async Task<ActionResult<UserDto>> GetAccountProfile() {
             try {
-                return _accountService.getProfile(new Guid(User.Identity.Name));
+                return await _accountService.getProfile(User.Identity.Name);
             }
             catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);

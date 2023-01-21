@@ -7,6 +7,9 @@ using FoodDeliveryAPI;
 using System.Text.Json.Serialization;
 using FoodDeliveryAPI.Services;
 using Microsoft.IdentityModel.Tokens;
+using FoodDeliveryAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,14 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Connect DB
 builder.Services.AddDbContext<ApplicationDbContext>();
+
+// Add Identity
+builder.Services.AddIdentity<User, Role>() // ƒобавление identity к проекту
+    .AddEntityFrameworkStores<ApplicationDbContext>() // указание контекста
+    .AddSignInManager<SignInManager<User>>() // €вное указание того, что менеджер авторизации должен работать с переопределенной моделью пользовател€
+    .AddUserManager<UserManager<User>>() // аналогично дл€ менеджера юзеров
+    .AddRoleManager<RoleManager<Role>>(); // аналогично дл€ менеджера ролей
+
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -68,6 +79,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
+using var serviceScope = app.Services.CreateScope();
+var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+// auto migration
+context.Database.Migrate();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
@@ -76,6 +92,7 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

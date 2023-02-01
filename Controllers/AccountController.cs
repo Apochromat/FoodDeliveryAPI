@@ -10,6 +10,7 @@ namespace FoodDeliveryAPI.Controllers {
         private readonly ILogger<AccountController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly IAccountService _accountService;
+        
 
         public AccountController(ILogger<AccountController> logger, ApplicationDbContext context, IAccountService accountService) {
             _logger = logger;
@@ -61,6 +62,10 @@ namespace FoodDeliveryAPI.Controllers {
             try {
                 return await _accountService.login(loginCredentials);
             }
+            catch (ArgumentException e) {
+                _logger.LogError(e, e.Message);
+                return Problem(statusCode: 401, title: e.Message);
+            }
             catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
                 return Problem(statusCode: 404, title: e.Message);
@@ -78,12 +83,12 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "400" > Bad Request</response>
         /// <response code = "401" > If user unauthorized</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         [Route("logout")]
-        public async Task<ActionResult> Logout() {
+        public async Task<ActionResult<Response>> Logout() {
             try {
-                return Ok();
+                return await _accountService.logout(Request.Headers["Authorization"]);
             }
             catch (KeyNotFoundException e) {
                 _logger.LogError(e, e.Message);
@@ -101,7 +106,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <returns></returns>
         /// <response code = "401" > Unauthorized</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         [Route("profile")]
         public async Task<ActionResult<UserDto>> GetAccountProfile() {
@@ -127,7 +132,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "401" > Unauthorized</response>
         /// <response code = "403" > Forbidden</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut]
         [Route("profile")]
         public async Task<ActionResult> EditAccountProfile() {

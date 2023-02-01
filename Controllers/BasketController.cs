@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDeliveryAPI.Controllers {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
     [Route("api/basket")]
     public class BasketController : ControllerBase {
@@ -22,6 +22,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "403" > Forbidden</response>
         /// <response code = "404" > Not Found</response>
         /// <response code = "500" > Internal Server Error</response>
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<ActionResult> GetCart() {
             try {
@@ -46,7 +47,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "403" > Forbidden</response>
         /// <response code = "404" > Not Found</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         [Route("dish/{dishId}")]
         public async Task<ActionResult> AddDishBasket(int dishId) {
@@ -73,7 +74,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "403" > Forbidden</response>
         /// <response code = "404" > Not Found</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete]
         [Route("dish/{dishId}")]
         public async Task<ActionResult> RemoveDishBasket(int dishId, Boolean increase) {

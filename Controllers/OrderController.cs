@@ -21,7 +21,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "403" > Forbidden</response>
         /// <response code = "404" > Not Found</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult> GetOrder(int id) {
@@ -45,7 +45,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "401" > Unauthorized</response>
         /// <response code = "404" > Not Found</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<ActionResult> GetOrders() {
             try {
@@ -69,7 +69,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "401" > Unauthorized</response>
         /// <response code = "403" > Forbidden</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public async Task<ActionResult> CreateOrder() {
             try {
@@ -95,7 +95,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "403" > Forbidden</response>
         /// <response code = "404" > Not Found</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         [Route("{id}/status")]
         public async Task<ActionResult> ConfirmOrderDelivery(int id) {

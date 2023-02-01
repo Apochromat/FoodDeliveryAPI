@@ -16,12 +16,14 @@ namespace FoodDeliveryAPI.Services {
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountService> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly ICacheService _cacheService;
 
-        public AccountService(ILogger<AccountService> logger, ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager) {
+        public AccountService(ILogger<AccountService> logger, ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, ICacheService cacheService) {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _context = context;
+            _cacheService = cacheService;
         }
 
         public async Task<TokenResponse> login(LoginCredentials loginCredentials) {
@@ -40,13 +42,17 @@ namespace FoodDeliveryAPI.Services {
                 signingCredentials: new SigningCredentials(JwtConfiguration.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
+            _logger.LogInformation("Successful login");
+
             return new TokenResponse(encodedJwt, 
-                identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault(),
+                identity.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault(),
                 Enum.Parse<RoleType>(identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault()));
         }
 
-        public String logout(string JwtToken) {
-            throw new NotImplementedException();
+        public async Task<Response> logout(string JwtToken) {
+            await _cacheService.DisableToken(JwtToken);
+            _logger.LogInformation("Successful logout");
+            return new Response("200", "Successful logout");
         }
 
         public async Task<TokenResponse> register(UserRegisterModel userRegisterModel) {
@@ -88,11 +94,11 @@ namespace FoodDeliveryAPI.Services {
             if (!result.Succeeded) return null;
 
             var claims = new List<Claim>{
-                    new Claim(ClaimTypes.Email, user.Email.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email.ToString()),
                     new Claim(ClaimTypes.Role, user.Role.ToString())
                 };
 
-            return new ClaimsIdentity(claims, "Token", ClaimTypes.Email, ClaimTypes.Role);
+            return new ClaimsIdentity(claims, "Token", ClaimTypes.Name, ClaimTypes.Role);
         }
     }
 }

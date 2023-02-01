@@ -10,7 +10,7 @@ namespace FoodDeliveryAPI
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-        public static int Lifetime = configuration.GetSection("JwtConfiguration").GetValue<int>("Lifetime"); // время жизни токена
+        public static int Lifetime = configuration.GetSection("JwtConfiguration").GetValue<int>("LifetimeMinutes"); // время жизни токена
         public static string Issuer = configuration.GetSection("JwtConfiguration").GetValue<string>("Issuer"); // издатель токена
         public static string Audience = configuration.GetSection("JwtConfiguration").GetValue<string>("Audience"); // потребитель токена
         private static string Key = configuration.GetSection("JwtConfiguration").GetValue<string>("Key");   // ключ для шифрации

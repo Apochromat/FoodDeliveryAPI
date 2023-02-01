@@ -74,7 +74,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "403" > Forbidden</response>
         /// <response code = "404" > Not Found dish</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         [Route("{id}/rating/check")]
         public async Task<ActionResult> DishRatingCheck(int id) {
@@ -101,7 +101,7 @@ namespace FoodDeliveryAPI.Controllers {
         /// <response code = "403" > Forbidden</response>
         /// <response code = "404" > Not Found dish</response>
         /// <response code = "500" > Internal Server Error</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         [Route("{id}/rating")]
         public async Task<ActionResult> SetDishRating(int id) {

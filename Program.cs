@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using FoodDeliveryAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddControllers().AddJsonOptions(opts => {
     var enumConverter = new JsonStringEnumConverter();
     opts.JsonSerializerOptions.Converters.Add(enumConverter);
 });
+
 // Add services
 builder.Services.AddScoped<IAccountService, AccountService>();
 
@@ -25,13 +28,20 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 // Connect DB
 builder.Services.AddDbContext<ApplicationDbContext>();
 
+// Connect distributed cache
+builder.Services.AddSingleton<IDistributedCache, RedisCache>();
+builder.Services.AddSingleton<ICacheService, CacheService>();
+builder.Services.AddStackExchangeRedisCache(options => {
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "JwtTokenCache";
+});
+
 // Add Identity
 builder.Services.AddIdentity<User, Role>() // ƒобавление identity к проекту
     .AddEntityFrameworkStores<ApplicationDbContext>() // указание контекста
     .AddSignInManager<SignInManager<User>>() // €вное указание того, что менеджер авторизации должен работать с переопределенной моделью пользовател€
     .AddUserManager<UserManager<User>>() // аналогично дл€ менеджера юзеров
     .AddRoleManager<RoleManager<Role>>(); // аналогично дл€ менеджера ролей
-
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();

@@ -104,6 +104,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseLogoutCheck();
 
 app.MapControllers();
 

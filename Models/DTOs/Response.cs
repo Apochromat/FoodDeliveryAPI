@@ -10,5 +10,10 @@ public class Response {
         Status = status;
         Message = message;
     }
+
+    public Response(int status, string? message) {
+        Status = status.ToString();
+        Message = message;
+    }
     public Response() { }
 }
